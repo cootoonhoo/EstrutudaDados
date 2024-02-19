@@ -34,63 +34,62 @@ void apagarFila(FilaController * pFilaController)
 	free(pFilaController);
 }
 
-	int adicionarFila(FilaController * pFilaControler, int dado)
+int adicionarFila(FilaController * pFilaControler, int dado)
+{
+	int posFila = pFilaControler->posFila;
+	if(pFilaControler->pFila == NULL) return 0;
+	if(posFila == 0)
 	{
-		int posFila = pFilaControler->posFila;
-		if(pFilaControler->pFila == NULL) return 0;
-		if(posFila == 0)
+		pFilaControler->pFila[posFila] = dado;
+		pFilaControler->headFila = &pFilaControler->pFila[posFila];
+		pFilaControler->posFila++;
+	}
+	else if(posFila < 50)
+	{
+		if(pFilaControler->headFila == &pFilaControler->pFila[posFila])
 		{
-			pFilaControler->pFila[posFila] = dado;
-			pFilaControler->headFila = &pFilaControler->pFila[posFila];
-			pFilaControler->posFila++;
+			pFilaControler->headFila = &pFilaControler->pFila[posFila+1];
+			pFilaControler->posHead = posFila+1;
 		}
-		else if(posFila < 50)
+		pFilaControler->pFila[posFila] = dado;
+		pFilaControler->posFila++;
+	}
+	else
+	{	
+		pFilaControler->headFila = &pFilaControler->pFila[1];
+		pFilaControler->posHead = 1;
+		pFilaControler->pFila[0] = dado;	
+		pFilaControler->posFila = 1;
+	}
+	return 1;
+}
+
+int peakFila(FilaController * pFilaControler)
+{
+	if(pFilaControler->headFila != NULL)
+		return *pFilaControler->headFila;
+	return -1;
+}
+int popFila(FilaController * pFilaControler)
+{
+	if(pFilaControler->posFila != 0)
+	{
+		int value = pFilaControler->pFila[pFilaControler->posHead];
+		pFilaControler->pFila[pFilaControler->posHead] = NULL;
+		if(pFilaControler->posHead == 49)
 		{
-			if(pFilaControler->headFila == &pFilaControler->pFila[posFila])
-			{
-				pFilaControler->headFila = &pFilaControler->pFila[posFila+1];
-				pFilaControler->posHead = posFila+1;
-			}
-			pFilaControler->pFila[posFila] = dado;
-			pFilaControler->posFila++;
+			pFilaControler->headFila = &pFilaControler->pFila[0];
+			pFilaControler->posHead = 0;
 		}
 		else
-		{	
-			pFilaControler->headFila = &pFilaControler->pFila[1];
-			pFilaControler->posHead = 1;
-			pFilaControler->pFila[0] = dado;	
-			pFilaControler->posFila = 1;
-		}
-		return 1;
-	}
-
-	int peakFila(FilaController * pFilaControler)
-	{
-		if(pFilaControler->headFila != NULL)
-			return *pFilaControler->headFila;
-		return -1;
-	}
-
-	int popFila(FilaController * pFilaControler)
-	{
-		if(pFilaControler->posFila != 0)
 		{
-			int value = pFilaControler->pFila[pFilaControler->posHead];
-			pFilaControler->pFila[pFilaControler->posHead] = NULL;
-			if(pFilaControler->posHead == 49)
-			{
-				pFilaControler->headFila = &pFilaControler->pFila[0];
-				pFilaControler->posHead = 0;
-			}
-			else
-			{
-				pFilaControler->headFila = &pFilaControler->pFila[pFilaControler->posHead+1];
-				pFilaControler->posHead++;
-			}
-			return value;
+			pFilaControler->headFila = &pFilaControler->pFila[pFilaControler->posHead+1];
+			pFilaControler->posHead++;
 		}
-		return -1;
+		return value;
 	}
+	return -1;
+}
 
 void PrintarFila(FilaController * fila)
 {
