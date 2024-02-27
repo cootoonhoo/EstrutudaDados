@@ -19,6 +19,7 @@ Node * creatNode(int data)
     if(n == NULL) return n;
     n->data = data;
     n->prev = NULL;
+    return n;
 }
 
 Pilha * createPilha()
@@ -27,6 +28,7 @@ Pilha * createPilha()
     if(p == NULL) return p;
     p->qnt = 0;
     p->head = NULL;
+    return p;
 }
 
 int pop(Pilha * p)
